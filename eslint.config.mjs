@@ -24,6 +24,7 @@ export default tseslint.config(
       },
     },
   },
+  
   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
@@ -32,4 +33,14 @@ export default tseslint.config(
       "prettier/prettier": ["error", { endOfLine: "auto" }],
     },
   },
+ 
+  // Custom rules for PrismaService file
+  {
+    files: ['src/database/prisma.service.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+    },
+  },
+  
 );
