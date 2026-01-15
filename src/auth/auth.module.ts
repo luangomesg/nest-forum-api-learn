@@ -4,10 +4,12 @@ import { AuthController } from './auth.controller';
 import { UserModule } from 'src/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
+import { DatabaseModule } from 'src/database/database.module';
 
 dotenv.config();
 @Module({
   imports: [
+    DatabaseModule,
     UserModule,
     JwtModule.register({
       global: true,

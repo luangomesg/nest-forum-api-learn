@@ -22,10 +22,10 @@ export class AnswersController {
   @UseGuards(AuthGuard)
   create(
     @Body() createAnswerDto: CreateAnswerDto,
-    @Request() request: { sub: number },
+    @Request() request: { sub: { sub: number } },
     @Param('questionId') questionId: string,
   ) {
-    return this.answersService.create(createAnswerDto, request.sub, questionId);
+    return this.answersService.create(createAnswerDto, request, questionId);
   }
 
   @Get()
