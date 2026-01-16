@@ -26,12 +26,21 @@ export class AnswersService {
   }
 
   async findAll() {
-    return await this.prisma.answers.findMany({});
+    return await this.prisma.answers.findMany({
+      include: {
+        question: true,
+        user: { select: { name: true, email: true } },
+      },
+    });
   }
 
   async findOne(id: number) {
     const findOneAnswer = await this.prisma.answers.findUnique({
       where: { id },
+      include: {
+        question: true,
+        user: { select: { name: true, email: true } },
+      },
     });
     if (!findOneAnswer) throw new NotFoundException('Answer not found');
     return findOneAnswer;
@@ -49,6 +58,7 @@ export class AnswersService {
   async remove(id: number) {
     const findAnswer = await this.prisma.answers.findUnique({ where: { id } });
     if (!findAnswer) throw new NotFoundException('Answer not found');
-    return this.prisma.answers.delete({ where: { id } });
+    await this.prisma.answers.delete({ where: { id } });
+    return { message: 'Answer deleted successfully' };
   }
 }

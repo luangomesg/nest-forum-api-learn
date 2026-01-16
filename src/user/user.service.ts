@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { Prisma, User } from 'src/generated/prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -12,14 +16,32 @@ export class UserService {
       throw new ConflictException('User already exists');
 
     const hashPassword = await bcrypt.hash(data.password, 10);
-    return this.prisma.user.create({
+    await this.prisma.user.create({
       data: { ...data, password: hashPassword },
+    });
+    return { message: 'User created successfully' };
+  }
+
+  async findAllUsers(): Promise<Omit<User, 'password'>[]> {
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: false,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<Omit<User, 'password'> | null> {
+    const findUser = await this.prisma.user.findUnique({
+      where: userWhereUniqueInput,
+    });
+    if (!findUser) throw new NotFoundException('User not found');
     return this.prisma.user.findUnique({
       where: userWhereUniqueInput,
       select: {
@@ -38,15 +60,23 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
+    const findUser = await this.prisma.user.findUnique({ where });
+    if (!findUser) throw new NotFoundException('User not found');
     return this.prisma.user.update({
       data,
       where,
     });
   }
 
-  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
-    return this.prisma.user.delete({
+  async deleteUser(
+    where: Prisma.UserWhereUniqueInput,
+  ): Promise<{ message: string }> {
+    const findUser = await this.prisma.user.findUnique({ where });
+    if (!findUser) throw new NotFoundException('User not found');
+    await this.prisma.user.delete({
       where,
     });
+
+    return { message: 'User deleted successfully' };
   }
 }

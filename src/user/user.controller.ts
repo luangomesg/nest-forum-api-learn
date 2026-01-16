@@ -23,8 +23,14 @@ export class UserController {
   @Post()
   async signupUser(
     @Body(new ValidationPipe()) userData: CreateUserDto,
-  ): Promise<UserModel> {
+  ): Promise<{ message: string }> {
     return this.userService.createUser(userData);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get()
+  async findAllUsers(): Promise<Omit<UserModel, 'password'>[]> {
+    return this.userService.findAllUsers();
   }
 
   @UseGuards(AuthGuard)
@@ -49,7 +55,9 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<UserModel> {
+  async deleteUser(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ message: string }> {
     return this.userService.deleteUser({ id });
   }
 }

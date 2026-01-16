@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { PrismaService } from 'src/database/prisma.service';
@@ -10,9 +14,15 @@ export class QuestionsService {
     createQuestionDto: CreateQuestionDto,
     request: { sub: { sub: number } },
   ) {
-    return await this.prisma.questions.create({
+    const findQuestion = await this.prisma.questions.findFirst({
+      where: { title: createQuestionDto.title },
+    });
+    if (findQuestion)
+      throw new ConflictException('Question with this title already exists');
+    await this.prisma.questions.create({
       data: { ...createQuestionDto, userId: request.sub.sub },
     });
+    return { message: 'Question created successfully' };
   }
 
   async findAll() {
@@ -46,6 +56,7 @@ export class QuestionsService {
       where: { id },
     });
     if (!findQuestion) throw new NotFoundException('Question not found');
-    return this.prisma.questions.delete({ where: { id } });
+    await this.prisma.questions.delete({ where: { id } });
+    return { message: 'Question deleted successfully' };
   }
 }
