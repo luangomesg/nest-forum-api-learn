@@ -15,7 +15,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { ValidationPipe } from 'src/validationSchemas/validation.pipe';
 import { CreateUserDto } from './dto/createUser.dto';
 import { updateUserDto } from './dto/updateUser.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
