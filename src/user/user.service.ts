@@ -35,15 +35,13 @@ export class UserService {
     });
   }
 
-  async user(
-    userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-  ): Promise<Omit<User, 'password'> | null> {
+  async findById(id: number): Promise<Omit<User, 'password'> | null> {
     const findUser = await this.prisma.user.findUnique({
-      where: userWhereUniqueInput,
+      where: { id },
     });
     if (!findUser) throw new NotFoundException('User not found');
     return this.prisma.user.findUnique({
-      where: userWhereUniqueInput,
+      where: { id },
       select: {
         id: true,
         name: true,

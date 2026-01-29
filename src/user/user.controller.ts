@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -36,11 +37,17 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('me')
+  async getMe(@Request() req: { sub: { sub: number } }) {
+    return this.userService.findById(req.sub.sub);
+  }
+
+  @UseGuards(AuthGuard)
   @Get(':id')
   async getUserById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Omit<UserModel, 'password'> | null> {
-    return this.userService.user({ id });
+    return this.userService.findById(id);
   }
 
   @UseGuards(AuthGuard)
