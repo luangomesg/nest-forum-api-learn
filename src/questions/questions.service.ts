@@ -27,7 +27,18 @@ export class QuestionsService {
 
   async findAll() {
     return await this.prisma.questions.findMany({
-      include: { answers: true, user: { select: { name: true, email: true } } },
+      include: {
+        user: {
+          select: { name: true },
+        },
+        answers: {
+          include: {
+            user: {
+              select: { name: true },
+            },
+          },
+        },
+      },
     });
   }
 
