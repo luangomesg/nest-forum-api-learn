@@ -11,7 +11,6 @@ export class AnswersService {
     request: { sub: { sub: number } },
     questionId: string,
   ) {
-    console.log(request.sub);
     const newAnswer = {
       body: createAnswerDto.body,
       user: {
