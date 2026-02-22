@@ -18,23 +18,23 @@ export class QuestionsService {
       where: { title: createQuestionDto.title },
     });
     if (findQuestion)
-      throw new ConflictException('Question with this title already exists');
+      throw new ConflictException('Já existe uma pergunta com esse titulo');
     await this.prisma.questions.create({
       data: { ...createQuestionDto, userId: request.sub.sub },
     });
-    return { message: 'Question created successfully' };
+    return { message: 'Pergunta criada com sucesso' };
   }
 
   async findAll() {
     return await this.prisma.questions.findMany({
       include: {
         user: {
-          select: { name: true },
+          select: { id: true, name: true },
         },
         answers: {
           include: {
             user: {
-              select: { name: true },
+              select: { id: true, name: true },
             },
           },
         },
@@ -45,9 +45,26 @@ export class QuestionsService {
   async findOne(id: number) {
     const findQuestion = await this.prisma.questions.findUnique({
       where: { id },
-      include: { answers: true, user: { select: { name: true, email: true } } },
+      include: {
+        answers: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
-    if (!findQuestion) throw new NotFoundException('Question not found');
+    if (!findQuestion) throw new NotFoundException('Pergunta não encontrada');
     return findQuestion;
   }
 
@@ -55,7 +72,7 @@ export class QuestionsService {
     const findQuestion = await this.prisma.questions.findUnique({
       where: { id },
     });
-    if (!findQuestion) throw new NotFoundException('Question not found');
+    if (!findQuestion) throw new NotFoundException('Pergunta não encontrada');
     return this.prisma.questions.update({
       where: { id },
       data: { ...updateQuestionDto },
@@ -66,8 +83,8 @@ export class QuestionsService {
     const findQuestion = await this.prisma.questions.findUnique({
       where: { id },
     });
-    if (!findQuestion) throw new NotFoundException('Question not found');
+    if (!findQuestion) throw new NotFoundException('Pergunta não encontrada');
     await this.prisma.questions.delete({ where: { id } });
-    return { message: 'Question deleted successfully' };
+    return { message: 'Pergunta deletada com sucesso' };
   }
 }
