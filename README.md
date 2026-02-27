@@ -4,10 +4,10 @@
 ![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/postgresql-4169e1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 
-API REST de um **fórum simples** desenvolvida com **NestJS + Prisma + SQLite**, utilizando **JWT** para autenticação.
+API REST de um **fórum simples** desenvolvida com **NestJS + Prisma + PostgreSQL**, utilizando **JWT** para autenticação.
 
 > Projeto de estudo focado em boas práticas de backend, arquitetura REST e integração com ORM.
 
@@ -18,7 +18,7 @@ API REST de um **fórum simples** desenvolvida com **NestJS + Prisma + SQLite**,
 - **Node.js**
 - **NestJS**
 - **Prisma ORM**
-- **SQLite**
+- **PostgreSQL**
 - **JWT (JSON Web Token)**
 - **TypeScript**
 
@@ -71,7 +71,7 @@ npm install
 
 3️⃣ Configurar o banco de dados
 
-O projeto utiliza SQLite com Prisma.
+O projeto utiliza PostgreSQL com Prisma.
 
 Execute as migrations:
 ```http
@@ -80,7 +80,7 @@ npx prisma migrate dev
 
 Isso irá:
 
-Criar o banco SQLite
+Criar o banco PostgreSQL
 
 Aplicar o schema
 
@@ -160,4 +160,5 @@ Headers:
 ```http
 Authorization: Bearer SEU_TOKEN
 ```
+
 
